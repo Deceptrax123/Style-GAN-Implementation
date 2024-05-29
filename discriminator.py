@@ -103,6 +103,6 @@ class Discriminator(Module):
         return x
 
 
-if __name__ == '__main__':
-    model = Discriminator()
-    summary(model, input_size=(3, 512, 512), batch_size=-1, device='cpu')
+# if __name__ == '__main__':
+#     model = Discriminator()
+#     summary(model, input_size=(3, 512, 512), batch_size=-1, device='cpu')

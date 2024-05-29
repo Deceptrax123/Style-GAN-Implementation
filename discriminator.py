@@ -48,8 +48,14 @@ class Discriminator(Module):
         self.dp7 = Dropout2d(0.2)
         self.lr7 = LeakyReLU(0.2)
 
-        self.conv8 = Conv2d(in_channels=512, out_channels=1,
-                            kernel_size=(4, 4), padding=0, stride=1)
+        self.conv8 = Conv2d(in_channels=512, out_channels=1024,
+                            kernel_size=(3, 3), padding=1, stride=2)
+        self.bn8 = BatchNorm2d(1024)
+        self.dp8 = Dropout2d(0.2)
+        self.lr8 = LeakyReLU(0.2)
+
+        self.conv9 = Conv2d(in_channels=1024, out_channels=1,
+                            kernel_size=(3, 3), padding=1, stride=2)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -88,10 +94,15 @@ class Discriminator(Module):
         x = self.lr7(x)
 
         x = self.conv8(x)
+        x = self.dp8(x)
+        x = self.bn8(x)
+        x = self.lr8(x)
+
+        x = self.conv9(x)
 
         return x
 
 
-# if __name__ == '__main__':
-#     model = Discriminator()
-#     summary(model, input_size=(3, 512, 512), batch_size=-1, device='cpu')
+if __name__ == '__main__':
+    model = Discriminator()
+    summary(model, input_size=(3, 512, 512), batch_size=-1, device='cpu')

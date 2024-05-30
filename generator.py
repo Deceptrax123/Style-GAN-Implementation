@@ -124,7 +124,7 @@ class SynthesisNetwork(Module):
 
 
 class GaussianNoise(Module):
-    def __init__(self, shape, std=0.05):
+    def __init__(self, shape, std=1):
         super().__init__()
 
         self.noise = Variable(torch.zeros(shape))

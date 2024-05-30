@@ -22,7 +22,8 @@ def train_step():
 
         # generate latent space noise
         # generate the constant matrix as required by Style GAN
-        const = torch.zeros(size=(real_samples.size(0), 512, 4, 4))
+        const = torch.zeros(
+            size=(real_samples.size(0), 512, 4, 4)).to(device=device)
         latent_space_samples = torch.randn(
             (real_samples.size(0), 512)).to(device=device)
         generated_samples = generator(latent_space_samples, const)
@@ -92,10 +93,10 @@ def training_loop():
             {'Generator Loss': train_losses[0], 'Discriminator Loss': train_losses[1]})
 
         # save model at epoch checkpoints
-        if ((epoch+1) % 10 == 0):
-            pathgen = './models/abstract_art/modified_arch/generator/generator{number}.pth'.format(
+        if ((epoch+1) % 5 == 0):
+            pathgen = 'weights/generator/generator{number}.pth'.format(
                 number=epoch+1)
-            pathdis = './models/abstract_art/modified_arch/discriminator/discriminator{number}.pth'.format(
+            pathdis = 'weights/discriminator/discriminator{number}.pth'.format(
                 number=epoch+1)
             torch.save(generator.state_dict(), pathgen)
             torch.save(discriminator.state_dict(), pathdis)

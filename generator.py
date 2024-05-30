@@ -56,7 +56,7 @@ class MappingNetwork(Module):
         self.linear4 = Linear(in_features=64, out_features=32)
         self.linear5 = Linear(in_features=32, out_features=64)
         self.linear6 = Linear(in_features=64, out_features=128)
-        self.linear7 = Linear(out_features=128, in_features=256)
+        self.linear7 = Linear(in_features=128, out_features=256)
         self.linear8 = Linear(in_features=256, out_features=512)
 
     def forward(self, x):
@@ -82,11 +82,11 @@ class SynthesisNetwork(Module):
         self.ada3 = AdaIn()
         self.ada4 = AdaIn()
 
-        self.upsample = UpsamplingBilinear2d(size=(2, 2), scale_factor=2)
+        self.upsample = UpsamplingBilinear2d(scale_factor=2)
 
         self.conv1 = Conv2d(in_channels=in_channels, out_channels=in_channels,
                             stride=1, kernel_size=(3, 3), padding=1)
-        self.conv2 = Conv2d(in_channels=out_channels, out_channels=out_channels,
+        self.conv2 = Conv2d(in_channels=in_channels, out_channels=out_channels,
                             stride=1, kernel_size=(3, 3), padding=1)
         self.conv3 = Conv2d(in_channels=out_channels, out_channels=out_channels,
                             stride=1, kernel_size=(3, 3), padding=1)
@@ -97,10 +97,10 @@ class SynthesisNetwork(Module):
         self.gaussian4 = GaussianNoise(shape=noise_shape2)
 
     def forward(self, f, const):
-        B1 = self.gaussian1()
-        B2 = self.gaussian2()
-        B3 = self.gaussian3()
-        B4 = self.gaussian4()
+        B1 = self.gaussian1().to(device='mps')
+        B2 = self.gaussian2().to(device='mps')
+        B3 = self.gaussian3().to(device='mps')
+        B4 = self.gaussian4().to(device='mps')
 
         # First Block
         x = torch.add(const, B1)
@@ -127,7 +127,7 @@ class GaussianNoise(Module):
     def __init__(self, shape, std=0.05):
         super().__init__()
 
-        self.noise = Variable(torch.zeros(shape, shape))
+        self.noise = Variable(torch.zeros(shape))
         self.std = std
 
     def forward(self):
@@ -141,14 +141,14 @@ class AdaIn(Module):
         super(AdaIn, self).__init__()
 
     def forward(self, x, y):
-        mu = torch.mean(x, dim=1)
-        std = torch.std(x, dim=1)
+        mu = torch.mean(x)
+        std = torch.std(x)
 
-        mu_style = torch.mean(y, dim=1)
-        std_style = torch.std(y, dim=1)
-        z_norm = (x-mu)/std  # Find z score
+        mu_style = torch.mean(y)
+        std_style = torch.std(y)
+        z_norm = (torch.mul(torch.add(x, -mu), 1/std))
 
         # Perform element wise-multiplication
-        adaptive_norm = (std_style*z_norm)+mu_style
+        adaptive_norm = torch.add(torch.mul(z_norm, std_style), mu_style)
 
         return adaptive_norm

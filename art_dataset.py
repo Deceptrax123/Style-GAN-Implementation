@@ -16,7 +16,7 @@ class AbstractArtDataset(torch.utils.data.Dataset):
         id = self.list_ids[index]
         load_dotenv('.env')
         root = os.getenv("root")
-        sample = Image.open(root+str(id)+".jpg")
+        sample = Image.open(root+"Abstract_image_"+str(id)+".jpg")
 
         composed_transforms = T.Compose([T.Resize(
             size=(1024, 1024)), T.ToTensor(), T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])

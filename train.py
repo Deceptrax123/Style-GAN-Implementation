@@ -28,7 +28,7 @@ def train_step():
             (real_samples.size(0), 512)).to(device=device)
         generated_samples = generator(latent_space_samples, const)
 
-        # Train the discriminator
+        # Train the discriminator)
         discriminator.zero_grad()
         out_gen_disc = discriminator(
             generated_samples).view(real_samples.size(0), 1)
@@ -43,8 +43,8 @@ def train_step():
         discriminator_optimizer.step()
 
         latent_space_samples = torch.randn(
-            (real_samples.size(0), 100)).to(device=device)
-        generated_samples = generator(latent_space_samples)
+            (real_samples.size(0), 512)).to(device=device)
+        generated_samples = generator(latent_space_samples, const)
 
         # Training the generator
         generator.zero_grad()
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     ids = list(range(0, 2782))
 
     params = {
-        'batch_size': 32,
+        'batch_size': 16,
         'shuffle': True,
         'num_workers': 0
     }

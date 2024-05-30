@@ -55,7 +55,7 @@ class Discriminator(Module):
         self.lr8 = LeakyReLU(0.2)
 
         self.conv9 = Conv2d(in_channels=1024, out_channels=1,
-                            kernel_size=(3, 3), padding=1, stride=2)
+                            kernel_size=(4, 4), padding=0, stride=1)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -105,4 +105,4 @@ class Discriminator(Module):
 
 # if __name__ == '__main__':
 #     model = Discriminator()
-#     summary(model, input_size=(3, 512, 512), batch_size=-1, device='cpu')
+#     summary(model, input_size=(3, 1024, 1024), batch_size=-1, device='cpu')

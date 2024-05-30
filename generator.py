@@ -22,10 +22,10 @@ class Generator(Module):
             16, 128, 128), noise_shape2=(8, 256, 256))
         self.g7 = SynthesisNetwork(in_channels=8, out_channels=4, noise_shape1=(
             8, 256, 256), noise_shape2=(4, 512, 512))
-        self.g8 = SynthesisNetwork(in_channels=4, out_channels=3, noise_shape1=(
-            4, 512, 512), noise_shape2=(4, 1024, 1024))
+        self.g8 = SynthesisNetwork(in_channels=4, out_channels=2, noise_shape1=(
+            4, 512, 512), noise_shape2=(2, 1024, 1024))
 
-        self.conv = Conv2d(in_channels=4, out_channels=3,
+        self.conv = Conv2d(in_channels=2, out_channels=3,
                            kernel_size=(1, 1), stride=1)
 
     def forward(self, z, constant):
